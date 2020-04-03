@@ -48,26 +48,36 @@ app.get('/',(req, res)=>{
     res.json({
         'success':true,
         'message' : 'Selamat Datang'
-    })
-})
+    })})
+app.post('/loginadmin', (req, res) => {
+    let data = req.body
 
+    if(data.username =='admin'&& data.password =='admin'){
+        let token = jwt.sign(data.username+ '|' + data.password,secretKey)
+        res.json({     
+            succes: true,
+            mesage:'Login success',
+            token:token
+        })}
+res.json({
+    success:false,
+    message: 'Login gagal'
+})})
+//login user
 app.post('/login', (req, res) => {
     let data = req.body
 
-    if(data.username =='daerah'&& data.password =='daerah'){
+    if(data.username =='user'&& data.password =='user'){
         let token = jwt.sign(data.username+ '|' + data.password,secretKey)
         res.json({
             succes: true,
             mesage:'Login success',
             token:token
-        })
-    }
+        })}
 res.json({
     success:false,
     message: 'Login gagal'
-})
-})
-
+})})
 //endpoint
 app.get('/daerah',isAuthorized,(req,res) =>{
     let sql=`
@@ -75,14 +85,11 @@ app.get('/daerah',isAuthorized,(req,res) =>{
 
     db.query(sql,(err,res) =>{
         if(err)throw err
-
         res.json({
             success:true,
             message: 'success',
             data:result
-        })
-    })
-})
+        })})})
             
 app.post('/daerah',isAuthorized,(req,res)=>{
     let data = req.body
@@ -132,6 +139,7 @@ result.json({
 })
 
 })
+
 
 app.listen(3000,()=>{
     console.log('App is running on port 3000')
